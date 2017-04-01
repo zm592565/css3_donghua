@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+		<style type="text/css">
+			/**
+			 * 这些所有的属性都是transform函数的
+			 * 
+			 * <!--2D-->
+			 * 
+			 * 2D元素的位移的学习：translate
+			 * X,Y是坐标值，这个值可以是数字也可以是百分比，也可以是负值
+			 * 单向位移函数translateX(X);translateY(Y);
+			 * 
+			 * 关于元素2D缩放：scale(x);scale(x,y);
+			 * 如果一个参数时，第二个参数默认相同与第一个；默认值为1，缩小的话是0-1之间的参数，放大：大于1的数值
+			 * 单向缩放 scaleX(x); scaleY(Y);
+			 * 
+			 * 
+			 * 2D旋转：rotate(deg); 里面的参数是一个角度值，可以是负值，负值表示逆时针，正值表述顺时针旋转 
+			 * 
+			 * 
+			 * 2D倾斜：skew(x);skew(x,y);
+			 * 以原点位置，围绕X轴和Y轴按照一定的角度倾斜，可能会改变元素的形状
+			 * X,Y为角度值   
+			 * 倾斜的单向函数skewX(x);skewY(y);
+			 * 
+			 * 
+			 * 
+			 * 
+			 * <!--3D-->
+			 * 
+			 * 3D转换:perspective  
+			 * 为元素定义3D属性时先要转换成3D 给元素增加perspective属性之后，其子元素会获得3D效果，而不是元素本身
+			 * 这个属性需要设置浏览器兼容 -webkit-perspective
+			 * 
+			 * 
+			 * 3D位移：translateZ();
+			 * translate3d(x,y,z);
+			 * 
+			 * 
+			 * 3D旋转：rotateZ(deg);rotateX(deg);rotateY(deg);
+			 * 
+			 * 
+			 * 
+			 * 
+			 * <!--过渡-->
+			 * 过渡：使CSS属性在我们设定的时间内平滑的过渡为我们设置的效果
+			 * 
+			 * 过渡需要指定4个属性：
+			 * 1.指定过渡属性；比如background，color等等
+			 * 2.指定过渡所需时间
+			 * 3.指定过渡函数，即过渡的速度和方式等，这个要素不是必须的，是可有可无的
+			 * 4.指定过渡延迟时间，表示开始执行的时间
+			 * 
+			 * 
+			 * 在CSS中只能鼠标经过也就是hover的方式指定过渡， 但是借助JS 就可以实现鼠标点击等过渡事件触发过渡效果
+			 * 过渡属性：transition-property：none|all|property; 该属性规定应用过渡效果的CSS属性的名称
+			 * 当指定的元素css属性改变时，开始过渡效果
+			 * 当设置为none是表示不使用过渡效果，all所有属性在值产生变化的时候都将采用过渡效果
+			 * 
+			 * 支持过渡效果的属性：
+			 * 1.颜色属性
+			 * 2.取值为数值的属性
+			 * 3.转换属性（比如transform）
+			 * 4.渐变属性
+			 * 5.visibility属性
+			 * 6.阴影属性
+			 * 
+			 * 
+			 * 过渡时间：transition-duration:s|ms ;规定完成过渡效果需要花费的时间，以秒或者毫秒作为单位,默认值是0，意味着没有过渡效果
+			 * 
+			 * 
+			 * 过渡函数：transition-timing-function: ;规定过渡效果的速度曲线
+			 * 取值为预定义函数，或者贝塞尔曲线
+			 * 语法：transition-duration：function；
+			 * 预定义函数：
+			 * ease：默认值，慢速开始，快速变快，慢速结束
+			 * linear:以相同速度开始至结束、（匀速）
+			 * ease-in：以慢速开始，加速效果
+			 * ease-out：以慢速开始，减速效果
+			 * ease-in-out：以慢速开始和结束，先加速再减速
+			 * 
+			 * 
+			 * 
+			 * 过渡延迟：transition-delay: ;规定过渡效果何时开始，即当改变元素属性值后多长时间开始执行过渡效果
+			 * 以秒或毫秒计
+			 * 
+			 * 
+			 * transition：property duration timing-function delay;属于一个简写属性，用于设置4个过渡属性
+			 * 因为上面的属性完成一个完整的动画属性过多，所以CSS3提出了一个集合式的属性
+			 * 这个函数的属性property duration为必须设置的，剩下的timing-function delay为非必选项
+			 * 
+			 * 
+			 * 过渡样式只能模拟动画，而不是真正的动画
+			 * 
+			 * 
+			 */
+			
+			
+			
+			
+			/*
+			 * 动画的学习：animation属性可以制作类似flash动画
+			 * 
+			 * 1.通过关键帧控制动画的每一步
+			 * 2.使元素从一种样式逐渐变化为另一种样式
+			 * 3.实现复杂的动画效果
+			 * 
+			 * CSS3，可以制作动画，但是在浏览器兼容上会需要处理一下
+			 * -moz-，-o-，-webkit-
+			 * 
+			 * 
+			 * 
+			 * 动画的使用步骤：
+			 * 1.声明动画
+			 * 		创建一个已命名的动画
+			 * 		使用@keyframes声明动画的关键帧
+			 * 
+			 * 2.为元素调用动画
+			 * 		对元素使用animation属性调用动画
+			 * 		设置动画的播放时间，播放次数等等
+			 * 
+			 * 
+			 * @keyframes的作用：声明动画中的各个状态以及他们所出现的时间点
+			 * 
+			 * 动画属性：
+			 * animation-name: ;调用动画，规定需要绑定到选择器的keyframes的名称
+			 * animation-duration: ;动画完成一个周期所需要的时间
+			 * animation-timing-function: ;规定动画的速度曲线
+			 * animation-delay: ;播放之前的延迟时间
+			 * animation-iteration-count: ;设置动画的播放次数
+			 * animation-direction: ;动画播放的方向； 比如我们可以让动画从0%-100%播放 这个叫做正向播放 也可以让动画从100%-0%播放 这个叫做逆向播放
+			 * 
+			 * 
+			 * 
+			 * 高级动画属性：
+			 * animation-play-state: ;设置动画的播放状态，正在运行或者是暂停，常结合js使用实现在播放中暂停或者继续播放动画
+			 * 取值：
+			 * paused[动画暂停]
+			 * running[动画播放]
+			 * 
+			 * animation-fill-mode: ;规定动画在播放之前或者播放之后其动画效果是否可见
+			 * 可取值：
+			 * none 不改变默认行为
+			 * forwards 当动画完成后，保持最后一个属性值（在最后一个关键帧中定义）
+			 * backwards：在动画显示之前，应用开始属性值（在第一个关键帧中定义）
+			 * both：向前和向后填充模式都被应用
+			 * 
+			 * 
+			 * animation：是一个简写属性，定义动画的各方面
+			 * 调用@keyframes定义的动画，并且可以直接设置上面所包含的所有动画属性
+			 * 
+			 * 语法：
+			 * animation：name(调用的keyframes的动画名称) duration(动画完成一个周期所需要的时间) timing-function(定动画的速度曲线) delay(播放之前的延迟时间) iteration-count(设置动画的播放次数) direction(动画播放的方向); 
+			 * 
+			 * 
+			 * 
+			 * 
+			 * */
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			/*2D demo*/
+			body{
+				height: 100%;
+				background: #f5f5f5;
+				padding-bottom: 50%;
+				animation: ;
+			}
+			
+			#id{
+				width: 100px;
+				height: 150px;
+				margin: 0px auto;
+				margin-top: 200px;
+				background: red;
+				
+				border: 1px solid yellow;
+			}
+			
+			#id:hover{
+				background: gray;
+				
+				/*2D:*/
+				transform: translate(100px,200px);/*X轴位移100px,Y轴位移200px*/
+				transform: scale(0.2);/*缩放*/
+				transform: rotate(45deg);/*旋转45度*/
+				transform: skewX(16deg);/*倾斜*/
+				
+				
+			}
+			
+			
+			
+			
+			/*3D demo*/
+			#dd1{
+				width: 400px;
+				height: 300px;
+				background: green;
+				perspective: 50px;/*3D转换属性，只有加了这个属性之后 其子元素才会出现3d效果*/
+				-webkit-perspective:50px ;
+				
+				
+			}
+			
+			#dd1 #dd2{
+				
+				width: 120px;
+				height: 100px;
+				background: gold;
+				
+				
+				/*3D:*/
+				transform:translateZ(100px);/*z轴位移*/
+				/*transform:translate3d(1px,2px,2px);*/
+				
+				transform: rotateZ(28deg);
+				transition-property: ;
+			}
+			
+			
+			
+			
+			/*完整带过渡效果的demo*/
+			
+			#dd3{
+				width: 200px;
+				height: 200px;
+				border: 2px solid royalblue;
+				border-radius: 50%;
+				color: yellow;
+				text-align: center;
+				line-height: 200px;
+				font-weight: bold;
+				margin: 0 auto;
+				
+				transition: transform 3s linear 20ms;
+				transition: color 3s linear 20ms;
+				
+				
+			}
+			
+			#dd3:hover{
+				color: red;
+				
+				transform: rotate(720deg);
+			}
+			
+			
+			
+			
+			
+			
+			/*animation 动画 demo*/
+			#dd4{
+				width: 200px;
+				height: 200px;
+				border: 2px solid black;
+				border-radius: 50%;
+				color: green;
+				text-align: center;
+				line-height: 200px;
+				font-weight: bold;
+				margin: 0 auto;
+				margin-top: 100px;
+				
+			}
+			
+			
+			/*声明动画 并定义动画名称test*/
+			@-webkit-keyframes test{
+				0%{
+					color: green;
+					transform: translate(0px) rotate(0deg);/*表示整个动画在开始的时候位移是0，旋转的角度也是0，相当于没有任何变化*/
+					
+				}/*定义动画的最开始状态*/
+				
+				
+				100%{
+					color: red;
+					border-radius: 0%;
+					transform: translate(0px) rotate(720deg);/*表示整个动画在结束时候位移是20px，旋转的角度720度*/
+				}
+				
+				
+			}
+			
+			#dd4:hover{
+				
+				-webkit-animation: test 2s linear 1s infinite alternate;/*调用动画 alternate 单数次数正向播放，偶数次数逆向播放 infinite无限次播放*/
+				
+				
+			}
+			
+			
+			
+			
+			
+		</style>
+	</head>
+	<body>
+		<div id="id"></div>
+		
+		
+		<div id="dd1">
+			<div id="dd2"></div>
+		</div>
+		
+		
+		<div id="dd3">
+			
+			欢迎使用过渡效果。
+			
+		</div>
+		
+		
+		<div id="dd4">
+			
+			欢迎使用animation动画。
+		</div>
+		
+		
+		
+		
+	</body>
+</html>
